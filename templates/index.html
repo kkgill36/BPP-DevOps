@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incident Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background: #f7f7f7;
+        }
+        h1, h2 {
+            color: #222;
+        }
+        form, table {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        input, textarea, select, button {
+            margin: 6px 0;
+            padding: 8px;
+            width: 100%;
+            max-width: 500px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+            padding: 10px;
+        }
+        .inline-form {
+            display: inline-block;
+            background: transparent;
+            padding: 0;
+            margin: 0;
+        }
+        .inline-form select,
+        .inline-form button {
+            width: auto;
+            display: inline-block;
+            margin-right: 6px;
+        }
+        .delete-btn {
+            background: #c62828;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .save-btn {
+            background: #1565c0;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .create-btn {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            cursor: pointer;
+            max-width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Incident Management System</h1>
+
+    <h2>Create Incident</h2>
+    <form action="/incidents" method="POST">
+        <label>Title</label><br>
+        <input type="text" name="title" required>
+
+        <label>Description</label><br>
+        <textarea name="description" rows="4" required></textarea>
+
+        <label>Severity</label><br>
+        <select name="severity" required>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+            <option value="Critical">Critical</option>
+        </select><br>
+
+        <button class="create-btn" type="submit">Create Incident</button>
+    </form>
+
+    <h2>Current Incidents</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Severity</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for incident in incidents %}
+            <tr>
+                <td>{{ incident.id }}</td>
+                <td>{{ incident.title }}</td>
+                <td>{{ incident.description }}</td>
+                <td>{{ incident.severity }}</td>
+                <td>{{ incident.status }}</td>
+                <td>
+                    <form class="inline-form" action="/incidents/{{ incident.id }}/update" method="POST">
+                        <select name="status">
+                            <option value="Open" {% if incident.status == 'Open' %}selected{% endif %}>Open</option>
+                            <option value="In Progress" {% if incident.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                            <option value="Resolved" {% if incident.status == 'Resolved' %}selected{% endif %}>Resolved</option>
+                        </select>
+                        <button class="save-btn" type="submit">Update</button>
+                    </form>
+
+                    <form class="inline-form" action="/incidents/{{ incident.id }}/delete" method="POST">
+                        <button class="delete-btn" type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

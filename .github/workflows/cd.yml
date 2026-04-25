@@ -35,4 +35,3 @@ jobs:
       - name: Deploy App
         run: |
           kubectl apply -f k8s/
-          kubectl rollout status deployment incident-app

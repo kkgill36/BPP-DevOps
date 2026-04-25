@@ -32,8 +32,7 @@ jobs:
 
       - name: Deploy App
         run: |
-        - name: Deploy App
-  run: |
-    kubectl apply -f k8s/
-    kubectl set image deployment/incident-app incident-app=ghcr.io/${{ github.repository_owner }}/incident-app:${{ github.sha }}
+          kubectl apply -f k8s/
+          kubectl set image deployment/incident-app incident-app=ghcr.io/${{ github.repository_owner }}/incident-app:${{ github.sha }}
+
 

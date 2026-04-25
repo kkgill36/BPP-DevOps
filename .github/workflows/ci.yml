@@ -41,4 +41,4 @@ jobs:
           severity: CRITICAL,HIGH
 
       - name: Push Docker image
-        run: docker push ghcr.io/${{ github.repository_owner }}/incident-app:latest∆
+        run: docker push ghcr.io/${{ github.repository_owner }}/incident-app:latest

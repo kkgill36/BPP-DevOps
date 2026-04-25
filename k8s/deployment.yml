@@ -12,17 +12,37 @@ spec:
       labels:
         app: incident-app
     spec:
+      automountServiceAccountToken: false
       containers:
         - name: incident-app
           image: ghcr.io/kkgill36/incident-app:latest
           ports:
             - containerPort: 5001
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 10001
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: false
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+
           readinessProbe:
             httpGet:
               path: /health
               port: 5001
             initialDelaySeconds: 5
             periodSeconds: 10
+
           livenessProbe:
             httpGet:
               path: /health

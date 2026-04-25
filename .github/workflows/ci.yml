@@ -49,6 +49,7 @@ jobs:
           exit-code: "0"
           vuln-type: os,library
           severity: CRITICAL,HIGH
+          ignore-unfixed: true
 
       - name: Push Docker image
         run: docker push ghcr.io/${{ github.repository_owner }}/incident-app:latest

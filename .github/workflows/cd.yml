@@ -5,7 +5,7 @@ on:
     branches:
       - main
   workflow_dispatch:
-  
+
 permissions:
   id-token: write
   contents: read
@@ -35,5 +35,4 @@ jobs:
       - name: Deploy App
         run: |
           kubectl apply -f k8s/
-          kubectl rollout restart deployment incident-app
           kubectl rollout status deployment incident-app

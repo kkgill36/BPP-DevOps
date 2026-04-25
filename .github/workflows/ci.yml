@@ -2,7 +2,11 @@ name: CI Pipeline
 
 on:
   push:
-  - main
+    branches:
+      - main
+  workflow_dispatch:
+
+
 
 
 jobs:

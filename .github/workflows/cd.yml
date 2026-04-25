@@ -29,8 +29,11 @@ jobs:
             --resource-group rg-bpp-devops \
             --name aks-bpp-devops \
             --overwrite-existing
-            
+
       - name: Deploy App
         run: |
-          kubectl set image deployment/incident-app incident-app=ghcr.io/${{ github.repository_owner }}/incident-app:${{ github.sha }}
-          kubectl rollout status deployment/incident-app --timeout=120s
+        - name: Deploy App
+  run: |
+    kubectl apply -f k8s/
+    kubectl set image deployment/incident-app incident-app=ghcr.io/${{ github.repository_owner }}/incident-app:${{ github.sha }}
+

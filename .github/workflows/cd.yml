@@ -1,4 +1,4 @@
-name: CD Pipeline b
+name: CD Pipeline
 
 on:
   workflow_dispatch:
@@ -6,6 +6,7 @@ on:
 permissions:
   id-token: write
   contents: read
+  packages: read
 
 jobs:
   deploy:
@@ -32,20 +33,22 @@ jobs:
       - name: Deploy App
         run: |
           kubectl apply -f k8s/
-          kubectl set image deployment/incident-app incident-app=ghcr.io/${{ github.repository_owner }}/incident-app:${{ github.sha }}
+          kubectl set image deployment/incident-app \
+            incident-app=ghcr.io/${{ github.repository_owner }}/incident-app:${{ github.sha }}
 
-      - name: Rollout checkout
+      - name: Verify deployment availability
         run: |
-          kubectl rollout status deployment/incident-app --timeout=180s
-          kubectl get pods
+          kubectl wait --for=condition=available deployment/incident-app --timeout=180s
+          kubectl get pods -l app=incident-app
 
-      - name: Health check 
-        run: 
+      - name: Health check
+        run: |
           kubectl port-forward service/incident-app-service 5001:80 &
           PF_PID=$!
+
           sleep 10
 
-          curl --fail http://localhost:5001/health
+          curl --fail --retry 5 --retry-delay 5 http://localhost:5001/health
 
           kill $PF_PID
 
@@ -56,13 +59,3 @@ jobs:
           kubectl rollout undo deployment/incident-app
           kubectl wait --for=condition=available deployment/incident-app --timeout=120s
           kubectl get pods -l app=incident-app
-          
-
-
-    
-
-
-
-       
-
-     

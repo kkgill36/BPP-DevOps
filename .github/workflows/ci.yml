@@ -45,7 +45,7 @@ jobs:
       - name: Aqua Security Trivy
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: ghcr.io/kkgill36/incident-app:latest
+          image-ref: ghcr.io/kkgill36/incident-app:${{ github.sha }}
           format: table
           exit-code: "0"
           vuln-type: os,library

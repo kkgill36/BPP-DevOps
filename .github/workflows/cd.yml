@@ -34,4 +34,8 @@ jobs:
           kubectl apply -f k8s/
           kubectl set image deployment/incident-app incident-app=ghcr.io/${{ github.repository_owner }}/incident-app:${{ github.sha }}
 
+      - name: Rollout checkout
+        run: |
+          kubectl get pods
+
      

@@ -2,27 +2,45 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: incident-app
+
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: incident-app
+
   template:
     metadata:
       labels:
         app: incident-app
+
     spec:
       automountServiceAccountToken: false
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+
       containers:
         - name: incident-app
           image: ghcr.io/kkgill36/incident-app:latest
+          imagePullPolicy: Always
+
           ports:
             - containerPort: 5001
 
+          env:
+            - name: DB_PATH
+              value: "/data/incidents.db"
+
+          volumeMounts:
+            - name: data-storage
+              mountPath: /data
+
           securityContext:
             allowPrivilegeEscalation: false
-            runAsNonRoot: true
-            runAsUser: 10001
             capabilities:
               drop:
                 - ALL
@@ -40,12 +58,16 @@ spec:
             httpGet:
               path: /health
               port: 5001
-            initialDelaySeconds: 5
+            initialDelaySeconds: 10
             periodSeconds: 10
 
           livenessProbe:
             httpGet:
               path: /health
               port: 5001
-            initialDelaySeconds: 10
+            initialDelaySeconds: 20
             periodSeconds: 15
+
+      volumes:
+        - name: data-storage
+          emptyDir: {}

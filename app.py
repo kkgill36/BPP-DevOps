@@ -2,8 +2,12 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify
 import sqlite3
 from pathlib import Path
 
+import os
+
+DB_PATH = os.getenv("DB_PATH", "/data/incidents.db")
+
 app = Flask(__name__)
-DB_PATH = Path("/tmp/incidents.db")
+
 
 
 def get_db_connection():

@@ -3,7 +3,7 @@ import sqlite3
 from pathlib import Path
 
 app = Flask(__name__)
-DB_PATH = Path("incidents.db")
+DB_PATH = Path("/tmp/incidents.db")
 
 
 def get_db_connection():

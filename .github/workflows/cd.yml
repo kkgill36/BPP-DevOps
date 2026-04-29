@@ -36,6 +36,7 @@ jobs:
 
       - name: Rollout checkout
         run: |
+          kubectl rollout status deployment/incident-app --timeout=180s
           kubectl get pods
 
      

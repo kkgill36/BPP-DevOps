@@ -7,13 +7,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-push:
+  security-and-build:
     runs-on: ubuntu-latest
 
     permissions:
       contents: read
       packages: write
-      security-events: write
 
     steps:
       - name: Checkout code
@@ -37,14 +36,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build image for Trivy scan
+      - name: Build image for security scan
         uses: docker/build-push-action@v6
         with:
           context: .
           load: true
           tags: ghcr.io/${{ github.repository_owner }}/incident-app:${{ github.sha }}
 
-      - name: Trivy scan
+      - name: Trivy vulnerability scan
         uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ghcr.io/${{ github.repository_owner }}/incident-app:${{ github.sha }}
@@ -54,7 +53,7 @@ jobs:
           severity: CRITICAL,HIGH
           ignore-unfixed: true
 
-      - name: Build and push multi-arch image
+      - name: Push multi-architecture image
         uses: docker/build-push-action@v6
         with:
           context: .

@@ -39,4 +39,30 @@ jobs:
           kubectl rollout status deployment/incident-app --timeout=180s
           kubectl get pods
 
+      - name: Health check 
+        run: 
+          kubectl port-forward service/incident-app-service 5001:80 &
+          PF_PID=$!
+          sleep 10
+
+          curl --fail http://localhost:5001/health
+
+          kill $PF_PID
+
+      - name: Rollback on failure
+        if: failure()
+        run: |
+          echo "Deployment or health check failed. Rolling back..."
+          kubectl rollout undo deployment/incident-app
+          kubectl wait --for=condition=available deployment/incident-app --timeout=120s
+          kubectl get pods -l app=incident-app
+          
+
+
+    
+
+
+
+       
+
      

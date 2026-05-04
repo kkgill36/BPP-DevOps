@@ -17,8 +17,11 @@ resource "azurerm_kubernetes_cluster" "aks"{
     identity {
         type = "SystemAssigned"
     }
+
     tags = {
-        environment = "dev"
-        project = "bpp-devops"
-    }
+    environment = var.environment
+    project     = "bpp-devops"
+    managed_by  = "terraform"
+}
+    
 }

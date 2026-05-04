@@ -18,6 +18,7 @@ variable "cluster_name"{
 }
 
 variable "node_count"{
+    
     default = 1
     description = "number of nodes"
 }
@@ -25,4 +26,10 @@ variable "node_count"{
 variable "vm_size"{
     default = "Standard_D2pls_v6"
     description = "aks vm size"
+}
+
+variable "environment" {
+  type        = string
+  default     = "prod"
+  description = "deployment environment"
 }
